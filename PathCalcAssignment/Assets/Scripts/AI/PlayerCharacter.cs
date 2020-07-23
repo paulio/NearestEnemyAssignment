@@ -6,44 +6,86 @@ using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
 {
+    [SerializeField]
+    float _visionDistance = 12f;
+
+    [SerializeField]
+    int _maxEnimies = 100;
+
     Enemy _currentNearestEnemy = null;
     private bool _hasEnemies;
     Dictionary<int, GameObject> _enemies = null;
+    private int _enemiesLayerMask;
+    private int _currentNearestEnemyId;
 
-    private void Awake()
+    private Collider[] _hits;
+
+    private void Start()
     {
-        NearViaTrigger.OnNearestEnemiesChanged += this.NearViaTrigger_OnNearestEnemiesChanged;
+        _enemiesLayerMask = LayerMask.GetMask("Enemies");
+        _hits = new Collider[_maxEnimies];
     }
 
-
-    private void Update()
+    private void FixedUpdate()
     {
-        if (_hasEnemies)
+        //if (_hasEnemies)
         {
-            UpdateNearestPosition();
+            UpdateNearestPositionViaRayCast();
         }
     }
 
-    private void NearViaTrigger_OnNearestEnemiesChanged(Dictionary<int, GameObject> enemies)
+    private void UpdateNearestPositionViaRayCast()
     {
-        _hasEnemies = true;
-        _enemies = enemies;
-        UpdateNearestPosition();
+        if (Physics.OverlapSphereNonAlloc(transform.position, _visionDistance, _hits, _enemiesLayerMask) > 0)
+        {
+            var nearestEnemy = GetNearestEnemy(_hits);
+            if (nearestEnemy != null)
+            {
+                var nearestEnemyId = nearestEnemy.GetInstanceID();
+                if (nearestEnemyId != _currentNearestEnemyId)
+                {
+                    if (_currentNearestEnemyId != 0)
+                    {
+                        _currentNearestEnemy.IsNearest = false;
+                    }
+
+                    _currentNearestEnemy = nearestEnemy;
+                    _currentNearestEnemyId = nearestEnemyId;
+                    _currentNearestEnemy.IsNearest = true;
+                }
+            }
+        }
     }
 
-    private void UpdateNearestPosition()
+    private Enemy GetNearestEnemy(Collider[] hits)
     {
+        var nearestIndex = -1;
+        var nearestDistance = float.PositiveInfinity;
         var currentPosition = transform.position;
-        var nearestEnemy = _enemies.Values.OrderBy(e => Vector3.Distance(e.transform.position, currentPosition)).FirstOrDefault();
-        if (nearestEnemy != null)
+        for (int i = 0; i < hits.Length; i++)
         {
-            if (_currentNearestEnemy != null)
+            var hit = hits[i];
+            if (hit == null)
             {
-                this._currentNearestEnemy.IsNearest = false;
+                break;
             }
 
-            _currentNearestEnemy = nearestEnemy.GetComponent<Enemy>();
-            _currentNearestEnemy.IsNearest = true;
+            var calcDistance = Vector3.Distance(hit.transform.position, currentPosition);
+            if (calcDistance < nearestDistance)
+            {
+                nearestDistance = calcDistance;
+                nearestIndex = i;
+            }
+        }
+
+        if (nearestIndex > -1)
+        {
+            // print($"Nearest ememy was {hits[nearestIndex].name}");
+            return hits[nearestIndex].gameObject.GetComponent<Enemy>();
+        }
+        else
+        {
+            return null;
         }
     }
 }

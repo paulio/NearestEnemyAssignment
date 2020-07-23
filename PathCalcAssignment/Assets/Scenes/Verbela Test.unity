@@ -1073,10 +1073,8 @@ GameObject:
   - component: {fileID: 562742934}
   - component: {fileID: 562742933}
   - component: {fileID: 562742938}
-  - component: {fileID: 562742940}
   - component: {fileID: 562742939}
   - component: {fileID: 562742941}
-  - component: {fileID: 562742942}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1206,19 +1204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9785216300d13b44593dafdf0752f7f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &562742940
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562742932}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 12
-  m_Center: {x: 0, y: 0, z: 0}
+  _visionDistance: 12
+  _maxEnimies: 100
 --- !u!54 &562742941
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1235,18 +1222,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &562742942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562742932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6f5b42236fba6f44b870bc2725ace54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &564080423 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2030852685964782694, guid: 675c6e541fb02bb4f97913922523e790,
