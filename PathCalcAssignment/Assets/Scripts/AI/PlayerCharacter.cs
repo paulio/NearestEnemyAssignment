@@ -26,13 +26,7 @@ public class PlayerCharacter : MonoBehaviour
         _hits = new Collider[_maxEnimies];
     }
 
-    private void Awake()
-    {
-        NearViaTrigger.OnNearestEnemiesChanged += this.NearViaTrigger_OnNearestEnemiesChanged;
-    }
-
-
-    private void Update()
+    private void FixedUpdate()
     {
         //if (_hasEnemies)
         {
@@ -92,29 +86,6 @@ public class PlayerCharacter : MonoBehaviour
         else
         {
             return null;
-        }
-    }
-
-    private void NearViaTrigger_OnNearestEnemiesChanged(Dictionary<int, GameObject> enemies)
-    {
-        _hasEnemies = true;
-        _enemies = enemies;
-        UpdateNearestPosition();
-    }
-
-    private void UpdateNearestPosition()
-    {
-        var currentPosition = transform.position;
-        var nearestEnemy = _enemies.Values.OrderBy(e => Vector3.Distance(e.transform.position, currentPosition)).FirstOrDefault();
-        if (nearestEnemy != null)
-        {
-            if (_currentNearestEnemy != null)
-            {
-                this._currentNearestEnemy.IsNearest = false;
-            }
-
-            _currentNearestEnemy = nearestEnemy.GetComponent<Enemy>();
-            _currentNearestEnemy.IsNearest = true;
         }
     }
 }
