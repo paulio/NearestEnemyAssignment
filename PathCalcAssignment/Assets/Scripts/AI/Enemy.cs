@@ -31,6 +31,8 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public Vector3 EnemyPosition => transform.position;
+
     private void Start()
     {
         _material = GetComponent<Renderer>().material;

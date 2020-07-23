@@ -24,6 +24,30 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
+    private GameObject GetNearestEnemy(IEnumerable<GameObject> enemies)
+    {
+        GameObject nearestEnemy = null;
+        var nearestDistance = float.PositiveInfinity;
+        var currentPosition = transform.position;
+        foreach(var enemy in enemies)
+        {
+            var hit = enemy;
+            if (hit == null)
+            {
+                break;
+            }
+
+            var calcDistance = Vector3.Distance(hit.transform.position, currentPosition);
+            if (calcDistance < nearestDistance)
+            {
+                nearestDistance = calcDistance;
+                nearestEnemy = enemy;
+            }
+        }
+
+        return nearestEnemy;
+    }
+
     private void NearViaTrigger_OnNearestEnemiesChanged(Dictionary<int, GameObject> enemies)
     {
         _hasEnemies = true;
@@ -33,8 +57,9 @@ public class PlayerCharacter : MonoBehaviour
 
     private void UpdateNearestPosition()
     {
-        var currentPosition = transform.position;
-        var nearestEnemy = _enemies.Values.OrderBy(e => Vector3.Distance(e.transform.position, currentPosition)).FirstOrDefault();
+        var nearestEnemy = GetNearestEnemy(_enemies.Values);
+        //var currentPosition = transform.position;
+        //var nearestEnemy = _enemies.Values.OrderBy(e => Vector3.Distance(e.transform.position, currentPosition)).FirstOrDefault();
         if (nearestEnemy != null)
         {
             if (_currentNearestEnemy != null)
